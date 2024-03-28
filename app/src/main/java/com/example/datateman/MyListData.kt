@@ -33,7 +33,7 @@ class MyListData : AppCompatActivity() {
         Toast.makeText(applicationContext, "Mohon Tunggu Sebentar...", Toast.LENGTH_LONG).show()
         val getUserID: String = auth?.getCurrentUser()?.getUid().toString()
         val getReference = database.getReference()
-        getReference.child("admin").child(getUserID).child("DataTeman")
+        getReference.child("Admin").child(getUserID).child("DataTeman")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     if (dataSnapshot.exists()) {

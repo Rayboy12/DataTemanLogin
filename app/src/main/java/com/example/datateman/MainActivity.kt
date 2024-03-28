@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(p0: View?) {
-        when (p0?.id) {
+        when (p0?.getId()) {
             R.id.save -> {
 
                 //mendapatkan user id dari pengguna yang terautentikasi

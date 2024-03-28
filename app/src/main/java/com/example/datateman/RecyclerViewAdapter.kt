@@ -44,10 +44,12 @@ class RecyclerViewAdapter (private val dataTeman: ArrayList<data_teman>, context
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val Nama: String? = dataTeman.get(position).nama
         val Alamat: String? = dataTeman.get(position).alamat
+        val NoHp: String? = dataTeman.get(position).no_hp
 
         //masukan nilai atau value ke dalam view
         holder.Nama.text = "Nama : $Nama"
         holder.Alamat.text = "Alamat: $Alamat"
+        holder.NoHp.text = "NoHp: $NoHp"
         holder.ListItem.setOnLongClickListener (
             object : View.OnLongClickListener {
                 override fun onLongClick(v: View?): Boolean {

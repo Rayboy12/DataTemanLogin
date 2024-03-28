@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(p0: View?) {
-        when (p0?.getId()) {
+        when (p0?.id) {
             R.id.save -> {
 
                 //mendapatkan user id dari pengguna yang terautentikasi
@@ -50,8 +50,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 val getNoHP: String = binding.noHp.getText().toString()
 
                 //mendapatkan refrensi dari database
-                val getReference: DatabaseReference
-                getReference = database.reference
+                val getReference: DatabaseReference = database.reference
 
                 //mengecek apakah ada data yang kosong
                 if (isEmpty(getNama) || isEmpty(getAlamat) || isEmpty(getNoHP)) {
@@ -84,7 +83,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         }
                     })
         }
-            R.id.show_data -> {}
+            R.id.show_data -> {
+                startActivity(Intent(this@MainActivity, MyListData::class.java))
+            }
         }
     }
 }

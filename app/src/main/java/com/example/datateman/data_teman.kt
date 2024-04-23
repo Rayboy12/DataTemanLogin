@@ -12,5 +12,6 @@ class data_teman {
         this.nama = nama
         this.alamat = alamat
         this.no_hp = no_hp
+
     }
 }

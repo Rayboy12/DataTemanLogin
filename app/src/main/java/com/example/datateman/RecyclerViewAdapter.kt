@@ -1,7 +1,11 @@
 package com.example.datateman
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +18,9 @@ class RecyclerViewAdapter (private val dataTeman: ArrayList<data_teman>, context
     RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>(){
 
     private val context: Context
+
+
+
 
     //view holder digunakan untuk menyimpan referensi dari view-view
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -41,7 +48,7 @@ class RecyclerViewAdapter (private val dataTeman: ArrayList<data_teman>, context
 
     @SuppressLint("SetTextI18n")
     //mengambil nilai atau value oada recycler view berdasarkan posisi tertentu
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val Nama: String? = dataTeman.get(position).nama
         val Alamat: String? = dataTeman.get(position).alamat
         val NoHp: String? = dataTeman.get(position).no_hp
@@ -53,7 +60,32 @@ class RecyclerViewAdapter (private val dataTeman: ArrayList<data_teman>, context
         holder.ListItem.setOnLongClickListener (
             object : View.OnLongClickListener {
                 override fun onLongClick(v: View?): Boolean {
-                    //materi pertemuan selanjutnya untuk edit dan delete
+                    //Fungsi untuk Update dan Delete
+                    holder.ListItem.setOnClickListener{view ->
+                        val action = arrayOf("Update", "Delete")
+                        val alert: AlertDialog.Builder = AlertDialog.Builder(view.context)
+                        alert.setItems(action, DialogInterface.OnClickListener { dialog, i ->
+                            when (i) {
+                                0 -> {
+                                    //Berpindah ke hal update data untuk ambil data pada listdata_teman
+                                    val bundle = Bundle()
+                                    bundle.putString("dataNama", dataTeman[position].nama)
+                                    bundle.putString("dataAlamat", dataTeman[position].alamat)
+                                    bundle.putString("dataNoHP", dataTeman[position].no_hp)
+                                    bundle.putString("getPrimaryKey", dataTeman[position].key)
+                                    val intent = Intent(view.context, UpdateData::class.java)
+                                    intent.putExtras(bundle)
+                                    context.startActivity(intent)
+                                }
+                                1 -> {
+                                    listener?.onDeleteData(dataTeman.get(position), position)
+                                }
+                            }
+                        })
+                        alert.create()
+                        alert.show()
+                        true
+                    }
                     return true
                 }
             })
@@ -64,8 +96,15 @@ class RecyclerViewAdapter (private val dataTeman: ArrayList<data_teman>, context
         return dataTeman.size
     }
 
+    interface dataListener {
+        fun onDeleteData(dataTeman: data_teman?, position: Int)
+    }
+
+    var listener: dataListener? = null
+
     //membuat konstruktor, untuk menerima input dari database
     init{
         this.context = context
+        this.listener = context as MyListData
     }
 }

@@ -15,7 +15,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class MyListData : AppCompatActivity() {
+class MyListData : AppCompatActivity(), RecyclerViewAdapter.dataListener {
 
     private var recyclerView: RecyclerView? = null
     private var adapter: RecyclerView.Adapter<*>? = null
@@ -37,6 +37,7 @@ class MyListData : AppCompatActivity() {
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     if (dataSnapshot.exists()) {
+                        dataTeman.clear()
                         for (snapshot in dataSnapshot.children) {
                             //mappping data pada data snapshot ke dalam objek dataTeman
                             val teman = snapshot.getValue(data_teman::class.java)
@@ -85,5 +86,24 @@ class MyListData : AppCompatActivity() {
         val itemDecoration = DividerItemDecoration(applicationContext, DividerItemDecoration.VERTICAL)
         itemDecoration.setDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.line)!!)
         recyclerView?.addItemDecoration(itemDecoration)
+    }
+
+    override fun onDeleteData(dataTeman: data_teman?, position: Int) {
+        val getUserID: String = auth?.getCurrentUser()?.getUid().toString()
+        val getReference = database.getReference()
+        if (getReference !=null) {
+            getReference.child("Admin")
+                .child(getUserID)
+                .child("DataTeman")
+                .child(dataTeman?.key.toString())
+                .removeValue()
+                .addOnSuccessListener {
+                    Toast.makeText(this@MyListData, "Data Berhasil dihapus",
+                        Toast.LENGTH_SHORT).show();
+                }
+        } else {
+            Toast.makeText(this@MyListData, "Referance Kosong",
+                Toast.LENGTH_SHORT).show()
+        }
     }
 }
